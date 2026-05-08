@@ -59,9 +59,22 @@ services:
     networks:
       - wp_network
 
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:-desafio}
+      POSTGRES_USER: ${DB_USER:-desafio}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-desafio}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
 volumes:
   db_data:
   wp_data:
+  postgres_data:
 
 networks:
   wp_network:
