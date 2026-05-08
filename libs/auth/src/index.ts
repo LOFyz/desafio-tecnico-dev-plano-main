@@ -1,1 +1,1 @@
-export * from './lib/auth.js';
+// BetterAuthModule exports will go here

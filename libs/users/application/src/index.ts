@@ -1,1 +1,1 @@
-export * from './lib/users-application.js';
+// CQRS handlers and queries will be exported here
