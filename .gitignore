@@ -50,3 +50,6 @@ out
 test-output
 
 .nx/polygraph
+
+# Local env
+.env
