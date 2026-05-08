@@ -180,6 +180,15 @@ importers:
       '@desafio/db':
         specifier: workspace:*
         version: link:../../libs/db
+      '@mikro-orm/core':
+        specifier: ^7.0.14
+        version: 7.0.14
+      '@mikro-orm/nestjs':
+        specifier: ^7.0.1
+        version: 7.0.1(@mikro-orm/core@7.0.14)(@nestjs/common@11.1.19(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@11.1.19)(reflect-metadata@0.1.14)
+      '@mikro-orm/postgresql':
+        specifier: ^7.0.14
+        version: 7.0.14(@mikro-orm/core@7.0.14)
       '@nestjs/common':
         specifier: ^11.0.0
         version: 11.1.19(reflect-metadata@0.1.14)(rxjs@7.8.2)

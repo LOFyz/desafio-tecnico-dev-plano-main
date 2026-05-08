@@ -4,10 +4,107 @@ schema: spec-driven
 # This is shown to AI when creating artifacts.
 # Add your tech stack, conventions, style guides, domain knowledge, etc.
 # Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+context: |
+  Blog autenticado com chat de IA com integração com MCP
+
+  A ideia do graphql é implementar o schema e depois implementa no frontend e no backend baseado nesse schema
+
+  schema first
+
+  Graphql no frontend
+  https://relay.dev/graphql/connections.htm
+
+
+  https://relay.dev/docs/tutorial/graphql/
+
+  importante para as queries!! - Cursor connection pagination
+  https://relay.dev/docs/tutorial/connections-pagination/
+
+  fragments
+  https://the-guild.dev/graphql/hive/blog/unleash-the-power-of-fragments-with-graphql-codegen
+
+  dataloader
+  https://github.com/graphql/dataloader
+
+  microorm
+  https://mikro-orm.io/docs/dataloaders
+
+  mock
+  https://the-guild.dev/graphql/codegen/plugins/typescript/typescript-msw
+
+  nestjs graphql federation (apollo subgraph)
+
+  graphql tem um shared context 
+
+  https://www.youtube.com/watch?v=svQjC6EXEQ4&t=804s
+
+
+
+  |
+  \/
+  https://www.apollographql.com/tutorials/intro-mcp-graphql/01-what-is-mcp
+
+
+  cqrs
+
+  quando eu precisar a resolução, usar o resolve field que vai mandar pra camda de aplicação uma query cqrs
+  https://docs.nestjs.com/recipes/cqrs
+
+  CQRS é a separação de use cases
+  Vai ser DDD
+
+  ao invés de usar usersService, usar uma query CQRS
+
+  https://docs.nestjs.com/recipes/cqrs
+  https://www.youtube.com/watch?v=cw0oVKCK4iU
+
+  robots, sitemap e feed rss
+
+
+
+  ##############
+
+  desenvolver um blog autenticado
+
+  usar wordpress para o blog e expor via headless cms via wp_graphql
+
+  a autenticação vai ser por better auth
+
+  e para consumir a api graphql não vai ser consumida diretamente do wp
+  consumir pelo gateway mãe da federation que vai ter a federation do wordpress no graphql federation e autenticar esse ngc via better auth
+
+  o gateway(feito em nest.js apollo federation) tem q ser o mais leve possível: só vai expor a federação, só vai receber o cookie, processar e no graphql context, permitir ou não a autenticação
+
+  a federação nest vai ter só uma query "me" que vai trazer os dados da sessão o Better Auth e conectar com os posts do wordpress
+
+  microsserviços: wordpress, gateway e federação
+
+  vai ter outra federação de usuário
+
+  integrar o blog do wordpress com o sistema de usuários que vai estar no better
+
+  Criar uma federação usando nest.js graphql que consiga consumir o usuário logado pelo better auth numa query graphql
+
+  Via conexões e cursores, conectar o better auth logado a posts wordpress
+
+  o banco de dados do WP é mysql,
+
+  o do better auth vai ser postgresql
+
+  frontend em Next.js: Shadcn, autenticação better auth client
+
+  NX é o gerenciador desse mono repo
+
+  alem de toda a parte do blog, vai ter a feature:
+
+  blog copilot, chat integrado pelo blog onde será possível atualizar posts, ver pessoas que se inscreveram na newsletter, as tags, usando o servidor MCP usando o apollo MCP
+
+  tem que ser um blogzinho, pode se inscrever na newsletter, tem que ter o SEO no talo, incremental static regeneration
+
+  deploy com SST
+
+  consumir o frontend de modelo relay
+
 
 # Per-artifact rules (optional)
 # Add custom rules for specific artifacts.

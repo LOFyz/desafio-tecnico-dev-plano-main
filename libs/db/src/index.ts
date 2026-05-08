@@ -1,1 +1,1 @@
-export * from './lib/db.module';
+export { DbModule, createMikroOrmOptions } from './lib/db.module';

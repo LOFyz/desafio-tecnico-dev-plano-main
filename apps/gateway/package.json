@@ -78,6 +78,10 @@
     }
   },
   "dependencies": {
+    "@desafio/db": "workspace:*",
+    "@mikro-orm/core": "^7.0.14",
+    "@mikro-orm/nestjs": "^7.0.1",
+    "@mikro-orm/postgresql": "^7.0.14",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
