@@ -1,24 +1,18 @@
 import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
-import {
-  ApolloFederationDriver,
-  ApolloFederationDriverConfig,
-} from '@nestjs/apollo';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { ConfigService } from '@nestjs/config';
-import { DbModule, createMikroOrmOptions } from '@desafio/db';
-import { BetterAuthModule } from '@desafio/auth';
+import { Migrator } from '@mikro-orm/migrations';
+import { createMikroOrmOptions, Migration20260508_BetterAuthSchema } from '@desafio/db';
 import {
   UserEntitySchema,
   SessionEntitySchema,
   AccountEntitySchema,
   VerificationEntitySchema,
 } from '@desafio/users-infrastructure';
-import { MeModule } from '../me/me.module';
-import type { GqlContext } from '../gql-context';
+import { MigrationService } from './migration.service';
 
-const UsersInfrastructureEntities = [
+export const UsersInfrastructureEntities = [
   UserEntitySchema,
   SessionEntitySchema,
   AccountEntitySchema,
@@ -27,27 +21,26 @@ const UsersInfrastructureEntities = [
 
 @Module({
   imports: [
-    DbModule,
-    BetterAuthModule.forRootAsync({ useFactory: () => ({}) }),
     MikroOrmModule.forRootAsync({
       driver: PostgreSqlDriver,
       useFactory: (config: ConfigService) => ({
         ...createMikroOrmOptions(config),
         entities: UsersInfrastructureEntities,
         entitiesTs: [],
+        extensions: [Migrator],
         discovery: { disableDynamicFileAccess: true },
+        migrations: {
+          migrationsList: [
+            {
+              name: 'Migration20260508_BetterAuthSchema',
+              class: Migration20260508_BetterAuthSchema,
+            },
+          ],
+        },
       }),
       inject: [ConfigService],
     }),
-    GraphQLModule.forRoot<ApolloFederationDriverConfig>({
-      driver: ApolloFederationDriver,
-      typePaths: ['**/*.graphql'],
-      context: ({ req }: { req: any }): GqlContext => ({
-        req,
-        sessionId: req.cookies?.['better-auth.session_token'],
-      }),
-    }),
-    MeModule,
   ],
+  providers: [MigrationService],
 })
-export class AppModule {}
+export class MigrationModule {}

@@ -1,5 +1,5 @@
 import { defineEntity, p } from '@mikro-orm/core';
-import { UserEntity, UserEntitySchema } from './user.entity.js';
+import type { UserEntity } from './user.entity.js';
 
 export class SessionEntity {
   id!: string;
@@ -24,6 +24,6 @@ export const SessionEntitySchema = defineEntity({
     updatedAt: p.datetime().fieldName('updated_at'),
     ipAddress: p.string().nullable().fieldName('ip_address'),
     userAgent: p.string().nullable().fieldName('user_agent'),
-    userId: p.manyToOne(() => UserEntitySchema).fieldName('user_id'),
+    userId: p.manyToOne('UserEntity' as any).fieldName('user_id'),
   },
 });

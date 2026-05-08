@@ -1,5 +1,5 @@
 import { defineEntity, p } from '@mikro-orm/core';
-import { UserEntity, UserEntitySchema } from './user.entity.js';
+import type { UserEntity } from './user.entity.js';
 
 export class AccountEntity {
   id!: string;
@@ -25,7 +25,7 @@ export const AccountEntitySchema = defineEntity({
     id: p.string().primary(),
     accountId: p.string().fieldName('account_id'),
     providerId: p.string().fieldName('provider_id'),
-    userId: p.manyToOne(() => UserEntitySchema).fieldName('user_id'),
+    userId: p.manyToOne('UserEntity' as any).fieldName('user_id'),
     accessToken: p.string().nullable().fieldName('access_token'),
     refreshToken: p.string().nullable().fieldName('refresh_token'),
     idToken: p.string().nullable().fieldName('id_token'),
