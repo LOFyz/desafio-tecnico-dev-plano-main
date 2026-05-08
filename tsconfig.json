@@ -8,6 +8,15 @@
     },
     {
       "path": "./apps/web"
+    },
+    {
+      "path": "./apps/gateway"
+    },
+    {
+      "path": "./libs/db"
+    },
+    {
+      "path": "./libs/ai"
     }
   ]
 }
