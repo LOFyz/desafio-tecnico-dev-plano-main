@@ -17,6 +17,27 @@
     },
     {
       "path": "./libs/ai"
+    },
+    {
+      "path": "./apps/users-subgraph"
+    },
+    {
+      "path": "./libs/auth"
+    },
+    {
+      "path": "./libs/users"
+    },
+    {
+      "path": "./libs/users/domain"
+    },
+    {
+      "path": "./libs/users/application"
+    },
+    {
+      "path": "./libs/users/infrastructure"
+    },
+    {
+      "path": "./apps/migrator"
     }
   ]
 }
