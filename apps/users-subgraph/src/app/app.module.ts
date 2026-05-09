@@ -47,7 +47,7 @@ const UsersInfrastructureEntities = [
       imports: [UsersModule],
       inject: [LoaderFactory],
       useFactory: (loaderFactory: LoaderFactory) => ({
-        typePaths: ['**/*.graphql'],
+        typePaths: ['apps/users-subgraph/src/**/*.graphql'],
         context: ({ req }: { req: any }): GqlContext => ({
           req,
           sessionId: req.cookies?.['better-auth.session_token'],
