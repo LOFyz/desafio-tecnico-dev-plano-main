@@ -93,6 +93,43 @@ if [ -d "/var/www/html/wp-content/plugins/wp-graphql-federations" ]; then
   wp plugin activate wp-graphql-federations --allow-root || true
 fi
 
+echo "👤 Provisionando service-account desafio-svc..."
+
+DESAFIO_SVC_USER="desafio-svc"
+DESAFIO_SVC_EMAIL="desafio-svc@desafio.local"
+DESAFIO_SVC_PASSWORD="${DESAFIO_SVC_PASSWORD:-desafio-svc-password}"
+
+if ! wp user get "$DESAFIO_SVC_USER" --allow-root >/dev/null 2>&1; then
+  wp user create "$DESAFIO_SVC_USER" "$DESAFIO_SVC_EMAIL" \
+    --role=editor \
+    --user_pass="$DESAFIO_SVC_PASSWORD" \
+    --allow-root
+  echo "✅ Usuário desafio-svc criado (senha: $DESAFIO_SVC_PASSWORD)"
+else
+  echo "ℹ️ Usuário desafio-svc já existe"
+fi
+
+# mu-plugin: extend wp-graphql-jwt-authentication token expiration to 10 years so the bootstrap
+# token is usable during local dev without per-request refresh.
+MU_PLUGIN_DIR="/var/www/html/wp-content/mu-plugins"
+mkdir -p "$MU_PLUGIN_DIR"
+cat > "$MU_PLUGIN_DIR/desafio-jwt-expiration.php" <<'PHP'
+<?php
+add_filter('graphql_jwt_auth_expire', function () { return time() + (60 * 60 * 24 * 365 * 10); });
+PHP
+echo "✅ mu-plugin desafio-jwt-expiration.php instalado"
+
+echo ""
+echo "================================================================"
+echo "🔑 desafio-svc ready. Mint a long-lived JWT with:"
+echo ""
+echo "  curl -s http://localhost:8080/graphql -H 'Content-Type: application/json' \\"
+echo "    -d '{\"query\":\"mutation { login(input:{username:\\\"$DESAFIO_SVC_USER\\\",password:\\\"$DESAFIO_SVC_PASSWORD\\\"}){authToken}}\"}'"
+echo ""
+echo "Then set WP_GRAPHQL_SERVICE_TOKEN=<authToken> in .env"
+echo "================================================================"
+echo ""
+
 echo "🔗 Garantindo permalink como post name..."
 current_permalink="$(wp option get permalink_structure --allow-root 2>/dev/null || true)"
 
