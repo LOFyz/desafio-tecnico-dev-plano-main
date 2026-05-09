@@ -15,11 +15,19 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
  */
 type Documents = {
     "\n  query Foundation_HomePageQuery {\n    me {\n      id\n      ...UserBadge_UserFragment\n    }\n  }\n": typeof types.Foundation_HomePageQueryDocument,
-    "\n  fragment UserBadge_UserFragment on User {\n    id\n    name\n  }\n": typeof types.UserBadge_UserFragmentFragmentDoc,
+    "\n  fragment UserBadge_UserFragment on AppUser {\n    id\n    name\n  }\n": typeof types.UserBadge_UserFragmentFragmentDoc,
+    "\n  fragment PostCardFragment on Post {\n    id\n    databaseId\n    slug\n    title\n    excerpt\n    date\n    appUser {\n      id\n      name\n    }\n  }\n": typeof types.PostCardFragmentFragmentDoc,
+    "\n  fragment PostDetailFragment on Post {\n    id\n    databaseId\n    slug\n    title\n    content\n    date\n    appUser {\n      id\n      name\n      email\n    }\n  }\n": typeof types.PostDetailFragmentFragmentDoc,
+    "\n  query PostDetail($slug: ID!) {\n    post(id: $slug, idType: SLUG) {\n      ...PostDetailFragment\n    }\n  }\n": typeof types.PostDetailDocument,
+    "\n  query PostsList($first: Int!, $after: String) {\n    posts(first: $first, after: $after) {\n      edges {\n        cursor\n        node {\n          ...PostCardFragment\n        }\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n  }\n": typeof types.PostsListDocument,
 };
 const documents: Documents = {
     "\n  query Foundation_HomePageQuery {\n    me {\n      id\n      ...UserBadge_UserFragment\n    }\n  }\n": types.Foundation_HomePageQueryDocument,
-    "\n  fragment UserBadge_UserFragment on User {\n    id\n    name\n  }\n": types.UserBadge_UserFragmentFragmentDoc,
+    "\n  fragment UserBadge_UserFragment on AppUser {\n    id\n    name\n  }\n": types.UserBadge_UserFragmentFragmentDoc,
+    "\n  fragment PostCardFragment on Post {\n    id\n    databaseId\n    slug\n    title\n    excerpt\n    date\n    appUser {\n      id\n      name\n    }\n  }\n": types.PostCardFragmentFragmentDoc,
+    "\n  fragment PostDetailFragment on Post {\n    id\n    databaseId\n    slug\n    title\n    content\n    date\n    appUser {\n      id\n      name\n      email\n    }\n  }\n": types.PostDetailFragmentFragmentDoc,
+    "\n  query PostDetail($slug: ID!) {\n    post(id: $slug, idType: SLUG) {\n      ...PostDetailFragment\n    }\n  }\n": types.PostDetailDocument,
+    "\n  query PostsList($first: Int!, $after: String) {\n    posts(first: $first, after: $after) {\n      edges {\n        cursor\n        node {\n          ...PostCardFragment\n        }\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n  }\n": types.PostsListDocument,
 };
 
 /**
@@ -43,7 +51,23 @@ export function graphql(source: "\n  query Foundation_HomePageQuery {\n    me {\
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  fragment UserBadge_UserFragment on User {\n    id\n    name\n  }\n"): (typeof documents)["\n  fragment UserBadge_UserFragment on User {\n    id\n    name\n  }\n"];
+export function graphql(source: "\n  fragment UserBadge_UserFragment on AppUser {\n    id\n    name\n  }\n"): (typeof documents)["\n  fragment UserBadge_UserFragment on AppUser {\n    id\n    name\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment PostCardFragment on Post {\n    id\n    databaseId\n    slug\n    title\n    excerpt\n    date\n    appUser {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  fragment PostCardFragment on Post {\n    id\n    databaseId\n    slug\n    title\n    excerpt\n    date\n    appUser {\n      id\n      name\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment PostDetailFragment on Post {\n    id\n    databaseId\n    slug\n    title\n    content\n    date\n    appUser {\n      id\n      name\n      email\n    }\n  }\n"): (typeof documents)["\n  fragment PostDetailFragment on Post {\n    id\n    databaseId\n    slug\n    title\n    content\n    date\n    appUser {\n      id\n      name\n      email\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query PostDetail($slug: ID!) {\n    post(id: $slug, idType: SLUG) {\n      ...PostDetailFragment\n    }\n  }\n"): (typeof documents)["\n  query PostDetail($slug: ID!) {\n    post(id: $slug, idType: SLUG) {\n      ...PostDetailFragment\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query PostsList($first: Int!, $after: String) {\n    posts(first: $first, after: $after) {\n      edges {\n        cursor\n        node {\n          ...PostCardFragment\n        }\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n  }\n"): (typeof documents)["\n  query PostsList($first: Int!, $after: String) {\n    posts(first: $first, after: $after) {\n      edges {\n        cursor\n        node {\n          ...PostCardFragment\n        }\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

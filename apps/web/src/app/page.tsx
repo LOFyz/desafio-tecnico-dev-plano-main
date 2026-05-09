@@ -34,11 +34,17 @@ export default async function Home() {
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <p className="text-sm text-muted-foreground">
-              Sign in to access the dashboard.
+              Sign in to access the dashboard, or read the blog without an
+              account.
             </p>
-            <Button asChild>
-              <Link href="/sign-in">Sign in</Link>
-            </Button>
+            <div className="flex gap-2">
+              <Button asChild>
+                <Link href="/sign-in">Sign in</Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="/blog">Read the blog</Link>
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </main>
@@ -63,6 +69,9 @@ export default async function Home() {
           <div className="flex gap-2">
             <Button asChild variant="outline">
               <Link href="/dashboard">Dashboard</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/blog">Blog</Link>
             </Button>
             <SignOutButton />
           </div>

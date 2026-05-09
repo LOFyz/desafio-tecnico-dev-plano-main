@@ -1,7 +1,7 @@
 import { graphql, useFragment, type FragmentType } from '@/gql';
 
 export const UserBadge_UserFragment = graphql(`
-  fragment UserBadge_UserFragment on User {
+  fragment UserBadge_UserFragment on AppUser {
     id
     name
   }
