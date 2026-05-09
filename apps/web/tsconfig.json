@@ -3,6 +3,9 @@
   "compilerOptions": {
     "jsx": "preserve",
     "noEmit": true,
+    "composite": false,
+    "declaration": false,
+    "declarationMap": false,
     "emitDeclarationOnly": false,
     "esModuleInterop": true,
     "resolveJsonModule": true,
@@ -17,7 +20,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/gql": ["./src/gql"],
+      "@/gql/*": ["./src/gql/*"]
     },
     "outDir": "dist",
     "rootDir": "src",
