@@ -24,9 +24,14 @@ export default async function DashboardPage() {
           <p className="text-sm">
             Hello, <span className="font-medium">{session.user.name}</span>.
           </p>
-          <Button asChild variant="outline">
-            <Link href="/">Home</Link>
-          </Button>
+          <div className="flex flex-col gap-2">
+            <Button asChild>
+              <Link href="/blog-copilot">Open blog copilot</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/">Home</Link>
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </main>

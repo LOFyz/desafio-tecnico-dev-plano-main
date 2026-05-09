@@ -1,0 +1,31 @@
+extend schema
+  @link(url: "https://specs.apollo.dev/federation/v2.7", import: ["@key"])
+
+type Mutation {
+  runPostAgent(input: RunPostAgentInput!): RunPostAgentResult!
+}
+
+input RunPostAgentInput {
+  prompt: String!
+}
+
+enum PostAgentAction {
+  CREATED
+  UPDATED
+  DELETED
+  NOOP
+}
+
+type PostRef {
+  databaseId: Int!
+  slug: String!
+  title: String!
+  status: String!
+}
+
+type RunPostAgentResult {
+  action: PostAgentAction!
+  post: PostRef
+  deletedDatabaseId: Int
+  message: String!
+}

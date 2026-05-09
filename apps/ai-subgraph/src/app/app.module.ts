@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import {
   ApolloFederationDriver,
@@ -6,18 +7,14 @@ import {
 } from '@nestjs/apollo';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
-import { ConfigService } from '@nestjs/config';
 import { DbModule, createMikroOrmOptions } from '@desafio/db';
-import { BetterAuthModule } from '@desafio/auth';
 import {
   UserEntitySchema,
   SessionEntitySchema,
   AccountEntitySchema,
   VerificationEntitySchema,
 } from '@desafio/users-infrastructure';
-import { MeModule } from '../me/me.module';
-import { UsersModule } from '../users/users.module';
-import { LoaderFactory } from '../users/loaders/loader-factory';
+import { AiSubgraphModule } from '../ai/ai.subgraph.module';
 import type { GqlContext } from '../gql-context';
 
 const UsersInfrastructureEntities = [
@@ -29,8 +26,8 @@ const UsersInfrastructureEntities = [
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     DbModule,
-    BetterAuthModule.forRootAsync({ useFactory: () => ({}) }),
     MikroOrmModule.forRootAsync({
       driver: PostgreSqlDriver,
       useFactory: (config: ConfigService) => ({
@@ -41,21 +38,13 @@ const UsersInfrastructureEntities = [
       }),
       inject: [ConfigService],
     }),
-    UsersModule,
-    GraphQLModule.forRootAsync<ApolloFederationDriverConfig>({
+    GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
-      imports: [UsersModule],
-      inject: [LoaderFactory],
-      useFactory: (loaderFactory: LoaderFactory) => ({
-        typePaths: ['apps/users-subgraph/src/**/*.graphql'],
-        context: ({ req }: { req: any }): GqlContext => ({
-          req,
-          sessionId: req.cookies?.['better-auth.session_token'],
-          loaders: loaderFactory.create(),
-        }),
-      }),
+      typePaths: ['apps/ai-subgraph/src/**/*.graphql'],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      context: ({ req }: { req: any }): GqlContext => ({ req }),
     }),
-    MeModule,
+    AiSubgraphModule,
   ],
 })
 export class AppModule {}

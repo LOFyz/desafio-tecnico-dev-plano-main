@@ -12,5 +12,12 @@
     },
     "./package.json": "./package.json"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.76",
+    "@ai-sdk/openai": "^3.0.63",
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/cqrs": "^11.0.0",
+    "ai": "^6.0.177",
+    "zod": "^3.24.1"
+  }
 }

@@ -11,6 +11,12 @@ const authUrl = process.env.NEXT_PUBLIC_AUTH_URL || 'http://localhost:3001';
  **/
 const nextConfig = {
   nx: {},
+  // AI copilot mutations can take 15-60s while the LLM runs tool-calls;
+  // raise the proxy timeout above Next's 30s default so the response
+  // doesn't get cut off mid-flight.
+  experimental: {
+    proxyTimeout: 120_000,
+  },
   async rewrites() {
     return [
       { source: '/api/graphql', destination: `${gatewayUrl}/graphql` },
