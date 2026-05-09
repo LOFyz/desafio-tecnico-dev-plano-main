@@ -9,6 +9,10 @@ out-tsc
 .logs
 .run
 
+# SST (Ion) deploy artifacts and OpenNext build output
+.sst
+.open-next
+
 # dependencies
 node_modules
 
