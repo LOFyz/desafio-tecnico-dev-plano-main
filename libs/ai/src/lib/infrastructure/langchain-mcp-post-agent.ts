@@ -58,16 +58,36 @@ export class LangChainMcpPostAgent implements PostAgent {
 
       let messages: BaseMessage[];
       try {
-        const result = await agent.invoke({
-          messages: [
-            new SystemMessage(SYSTEM_PROMPT),
-            new HumanMessage(input.prompt),
-          ],
-        });
+        const result = await agent.invoke(
+          {
+            messages: [
+              new SystemMessage(SYSTEM_PROMPT),
+              new HumanMessage(input.prompt),
+            ],
+          },
+          // Bump LangGraph's default 25-step ReAct cap. The happy-path chain
+          // is short (listPosts → update/delete → reply ≈ 3 steps) but the
+          // free-tier NVIDIA Llama can be indecisive on update/delete — call
+          // listPosts twice, second-guess itself, etc. 40 gives it room to
+          // settle without thrashing forever.
+          { recursionLimit: 40 },
+        );
         messages = result.messages as BaseMessage[];
       } catch (err) {
-        this.logger.warn(`Agent run failed: ${(err as Error).message}`);
-        throw new AiGenerationFailedError('Agent run failed', err);
+        // LangGraph throws GraphRecursionError when the limit fires. Salvage
+        // any tool call that already landed: the post may have been created
+        // even if the model never produced a final assistant reply. The
+        // catcher below then maps the last tool result to CREATED/UPDATED/
+        // DELETED instead of failing the whole request with AI_GENERATION_FAILED.
+        const errMsg = (err as Error).message ?? '';
+        const partial = extractPartialMessages(err);
+        if (partial && /recursion limit/i.test(errMsg)) {
+          this.logger.warn(`Agent hit recursion limit; returning partial result`);
+          messages = partial;
+        } else {
+          this.logger.warn(`Agent run failed: ${errMsg}`);
+          throw new AiGenerationFailedError('Agent run failed', err);
+        }
       }
 
       const finalText = extractFinalAssistantText(messages);
@@ -107,6 +127,26 @@ export class LangChainMcpPostAgent implements PostAgent {
       });
     }
   }
+}
+
+/**
+ * LangGraph's GraphRecursionError carries the partial graph state on a
+ * non-typed property. We probe a couple of common shapes and pick the
+ * first array of BaseMessage we find.
+ */
+function extractPartialMessages(err: unknown): BaseMessage[] | null {
+  if (!err || typeof err !== 'object') return null;
+  const candidates = [
+    (err as { state?: { messages?: unknown } }).state?.messages,
+    (err as { values?: { messages?: unknown } }).values?.messages,
+    (err as { messages?: unknown }).messages,
+  ];
+  for (const c of candidates) {
+    if (Array.isArray(c) && c.length > 0) {
+      return c as BaseMessage[];
+    }
+  }
+  return null;
 }
 
 function extractFinalAssistantText(messages: BaseMessage[]): string {
