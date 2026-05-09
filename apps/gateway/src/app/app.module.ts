@@ -1,21 +1,30 @@
 import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { PostgreSqlDriver } from '@mikro-orm/postgresql';
-import { createMikroOrmOptions, DbModule } from '@desafio/db';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from '@nestjs/apollo';
+import { IntrospectAndCompose } from '@apollo/gateway';
+import { CookieDataSource } from './cookie-data-source';
 
 @Module({
   imports: [
-    DbModule,
-    MikroOrmModule.forRootAsync({
-      driver: PostgreSqlDriver,
-      useFactory: createMikroOrmOptions,
-      inject: [ConfigService],
+    GraphQLModule.forRoot<ApolloGatewayDriverConfig>({
+      driver: ApolloGatewayDriver,
+      server: {
+        context: ({ req }: { req: Request }) => ({ req }),
+      },
+      gateway: {
+        buildService({ url }) {
+          return new CookieDataSource({ url });
+        },
+        supergraphSdl: new IntrospectAndCompose({
+          subgraphs: [
+            {
+              name: 'users',
+              url: process.env['USERS_SUBGRAPH_URL'] ?? 'http://localhost:3001/graphql',
+            },
+          ],
+        }),
+      },
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
