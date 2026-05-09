@@ -17,7 +17,6 @@ import {
 } from '@desafio/users-infrastructure';
 import { MeModule } from '../me/me.module';
 import { UsersModule } from '../users/users.module';
-import { LoaderFactory } from '../users/loaders/loader-factory';
 import type { GqlContext } from '../gql-context';
 
 const UsersInfrastructureEntities = [
@@ -42,17 +41,12 @@ const UsersInfrastructureEntities = [
       inject: [ConfigService],
     }),
     UsersModule,
-    GraphQLModule.forRootAsync<ApolloFederationDriverConfig>({
+    GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
-      imports: [UsersModule],
-      inject: [LoaderFactory],
-      useFactory: (loaderFactory: LoaderFactory) => ({
-        typePaths: ['apps/users-subgraph/src/**/*.graphql'],
-        context: ({ req }: { req: any }): GqlContext => ({
-          req,
-          sessionId: req.cookies?.['better-auth.session_token'],
-          loaders: loaderFactory.create(),
-        }),
+      typePaths: ['apps/users-subgraph/src/**/*.graphql'],
+      context: ({ req }: { req: any }): GqlContext => ({
+        req,
+        sessionId: req.cookies?.['better-auth.session_token'],
       }),
     }),
     MeModule,

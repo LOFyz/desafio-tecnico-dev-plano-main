@@ -7,19 +7,15 @@ import {
   FindUsersByDatabaseIdsQueryHandler,
 } from '@desafio/users-application';
 import { UserEntity } from '@desafio/users-infrastructure';
-import { AppUserReferenceResolver, PostAppUserResolver } from './users.resolver';
-import { LoaderFactory } from './loaders/loader-factory';
+import { AppUserReferenceResolver } from './users.resolver';
 
 @Module({
   imports: [CqrsModule, MikroOrmModule.forFeature([UserEntity])],
   providers: [
     AppUserReferenceResolver,
-    PostAppUserResolver,
     FindUserByIdQueryHandler,
     FindUserByDatabaseIdQueryHandler,
     FindUsersByDatabaseIdsQueryHandler,
-    LoaderFactory,
   ],
-  exports: [LoaderFactory],
 })
 export class UsersModule {}
