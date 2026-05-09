@@ -16,6 +16,7 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
 type Documents = {
     "\n  query Foundation_HomePageQuery {\n    me {\n      id\n      ...UserBadge_UserFragment\n    }\n  }\n": typeof types.Foundation_HomePageQueryDocument,
     "\n  fragment UserBadge_UserFragment on AppUser {\n    id\n    name\n  }\n": typeof types.UserBadge_UserFragmentFragmentDoc,
+    "\n  mutation RunPostAgent($input: RunPostAgentInput!) {\n    runPostAgent(input: $input) {\n      action\n      post {\n        databaseId\n        slug\n        title\n        status\n      }\n      deletedDatabaseId\n      message\n    }\n  }\n": typeof types.RunPostAgentDocument,
     "\n  fragment PostCardFragment on Post {\n    id\n    databaseId\n    slug\n    title\n    excerpt\n    date\n    appUser {\n      id\n      name\n    }\n  }\n": typeof types.PostCardFragmentFragmentDoc,
     "\n  fragment PostDetailFragment on Post {\n    id\n    databaseId\n    slug\n    title\n    content\n    date\n    appUser {\n      id\n      name\n      email\n    }\n  }\n": typeof types.PostDetailFragmentFragmentDoc,
     "\n  query PostDetail($slug: ID!) {\n    post(id: $slug, idType: SLUG) {\n      ...PostDetailFragment\n    }\n  }\n": typeof types.PostDetailDocument,
@@ -24,6 +25,7 @@ type Documents = {
 const documents: Documents = {
     "\n  query Foundation_HomePageQuery {\n    me {\n      id\n      ...UserBadge_UserFragment\n    }\n  }\n": types.Foundation_HomePageQueryDocument,
     "\n  fragment UserBadge_UserFragment on AppUser {\n    id\n    name\n  }\n": types.UserBadge_UserFragmentFragmentDoc,
+    "\n  mutation RunPostAgent($input: RunPostAgentInput!) {\n    runPostAgent(input: $input) {\n      action\n      post {\n        databaseId\n        slug\n        title\n        status\n      }\n      deletedDatabaseId\n      message\n    }\n  }\n": types.RunPostAgentDocument,
     "\n  fragment PostCardFragment on Post {\n    id\n    databaseId\n    slug\n    title\n    excerpt\n    date\n    appUser {\n      id\n      name\n    }\n  }\n": types.PostCardFragmentFragmentDoc,
     "\n  fragment PostDetailFragment on Post {\n    id\n    databaseId\n    slug\n    title\n    content\n    date\n    appUser {\n      id\n      name\n      email\n    }\n  }\n": types.PostDetailFragmentFragmentDoc,
     "\n  query PostDetail($slug: ID!) {\n    post(id: $slug, idType: SLUG) {\n      ...PostDetailFragment\n    }\n  }\n": types.PostDetailDocument,
@@ -52,6 +54,10 @@ export function graphql(source: "\n  query Foundation_HomePageQuery {\n    me {\
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  fragment UserBadge_UserFragment on AppUser {\n    id\n    name\n  }\n"): (typeof documents)["\n  fragment UserBadge_UserFragment on AppUser {\n    id\n    name\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation RunPostAgent($input: RunPostAgentInput!) {\n    runPostAgent(input: $input) {\n      action\n      post {\n        databaseId\n        slug\n        title\n        status\n      }\n      deletedDatabaseId\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation RunPostAgent($input: RunPostAgentInput!) {\n    runPostAgent(input: $input) {\n      action\n      post {\n        databaseId\n        slug\n        title\n        status\n      }\n      deletedDatabaseId\n      message\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

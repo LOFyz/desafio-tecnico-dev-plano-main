@@ -66,12 +66,15 @@ export default async function Home() {
           ) : (
             <p className="text-sm text-muted-foreground">No user data.</p>
           )}
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button asChild variant="outline">
               <Link href="/dashboard">Dashboard</Link>
             </Button>
             <Button asChild variant="outline">
               <Link href="/blog">Blog</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/blog-copilot">Copilot</Link>
             </Button>
             <SignOutButton />
           </div>
