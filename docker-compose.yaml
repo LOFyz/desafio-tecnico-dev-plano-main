@@ -31,6 +31,11 @@ services:
         define('GRAPHQL_JWT_AUTH_SECRET_KEY', '(t`jl0mh~nuI1|+YfC<0BcLIpf?^V|tIB$uOxkpE~TDMnQRddy[:LbCoZkhDpbux');
     volumes:
       - wp_data:/var/www/html
+      # Bind-mount our local copy of wp-graphql-federations on top of the
+      # one the entrypoint git-clones from upstream. Lets us iterate on
+      # AppUserBridge.php (and the rest of the plugin) without rebuilding
+      # the image or destroying wp_data.
+      - ./docker/wordpress/plugins/wp-graphql-federations:/var/www/html/wp-content/plugins/wp-graphql-federations
     networks:
       - wp_network
 
