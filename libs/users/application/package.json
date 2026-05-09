@@ -18,6 +18,9 @@
   "dependencies": {
     "@desafio/auth": "workspace:*",
     "@desafio/users-domain": "workspace:*",
+    "@desafio/users-infrastructure": "workspace:*",
+    "@mikro-orm/core": "^7.0.14",
+    "@mikro-orm/nestjs": "^7.0.1",
     "@nestjs/cqrs": "^11.0.0",
     "@nestjs/common": "^11.0.0",
     "tslib": "^2.3.0"

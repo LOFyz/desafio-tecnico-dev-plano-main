@@ -7,6 +7,7 @@ export class UserEntity implements User {
   email!: string;
   emailVerified!: boolean;
   image!: string | null;
+  databaseId!: number | null;
   createdAt!: Date;
   updatedAt!: Date;
 }
@@ -21,6 +22,7 @@ export const UserEntitySchema = defineEntity({
     email: p.string().unique(),
     emailVerified: p.boolean().fieldName('email_verified'),
     image: p.string().nullable(),
+    databaseId: p.integer().nullable().fieldName('wp_user_id'),
     createdAt: p.datetime().fieldName('created_at'),
     updatedAt: p.datetime().fieldName('updated_at'),
   },

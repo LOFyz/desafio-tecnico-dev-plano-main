@@ -9,10 +9,15 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "types": ["node"]
   },
   "include": ["src/**/*.ts"],
   "references": [
+    {
+      "path": "../infrastructure/tsconfig.lib.json"
+    },
     {
       "path": "../domain/tsconfig.lib.json"
     },
