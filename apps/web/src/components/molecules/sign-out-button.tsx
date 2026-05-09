@@ -1,27 +1,36 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
+import { authClient } from '@/lib/auth/client';
+import { mapAuthError } from '@/lib/auth/errors';
 import { Button } from '@/components/atoms/ui/button';
-import { signOut } from '@/lib/auth/client';
 
 export function SignOutButton() {
   const router = useRouter();
+  const [pending, setPending] = useState(false);
 
   async function handleClick() {
+    setPending(true);
     try {
-      await signOut();
-      toast.success('Signed out');
+      const { error } = await authClient.signOut();
+      if (error) {
+        toast.error(mapAuthError(error));
+        return;
+      }
       router.refresh();
-    } catch {
-      toast.error('Sign out failed');
+    } catch (err) {
+      toast.error(mapAuthError(err));
+    } finally {
+      setPending(false);
     }
   }
 
   return (
-    <Button variant="ghost" onClick={handleClick}>
-      Sign out
+    <Button variant="ghost" onClick={handleClick} disabled={pending}>
+      {pending ? 'Signing out…' : 'Sign out'}
     </Button>
   );
 }
