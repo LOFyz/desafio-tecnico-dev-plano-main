@@ -16,6 +16,7 @@ import {
   VerificationEntitySchema,
 } from '@desafio/users-infrastructure';
 import { MeModule } from '../me/me.module';
+import { UsersModule } from '../users/users.module';
 import type { GqlContext } from '../gql-context';
 
 const UsersInfrastructureEntities = [
@@ -48,6 +49,7 @@ const UsersInfrastructureEntities = [
       }),
     }),
     MeModule,
+    UsersModule,
   ],
 })
 export class AppModule {}

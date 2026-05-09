@@ -90,6 +90,7 @@
     "@desafio/auth": "workspace:*",
     "@desafio/db": "workspace:*",
     "@desafio/users-application": "workspace:*",
+    "@desafio/users-domain": "workspace:*",
     "@desafio/users-infrastructure": "workspace:*",
     "@mikro-orm/core": "^7.0.14",
     "@mikro-orm/nestjs": "^7.0.1",
