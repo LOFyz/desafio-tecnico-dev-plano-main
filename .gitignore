@@ -54,3 +54,6 @@ test-output
 # Local env
 .env
 vite.config.*.timestamp*
+
+# MikroORM schema snapshot
+.snapshot-*.json
