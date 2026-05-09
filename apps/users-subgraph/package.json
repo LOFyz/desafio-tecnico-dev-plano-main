@@ -22,7 +22,7 @@
           "sourceMap": true,
           "generatePackageJson": false,
           "assets": ["apps/users-subgraph/src/assets"],
-          "skipTypeChecking": true
+          "typeCheckOptions": false
         },
         "configurations": {
           "development": {

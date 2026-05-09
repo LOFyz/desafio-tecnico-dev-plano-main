@@ -21,7 +21,7 @@
           "sourceMap": true,
           "generatePackageJson": false,
           "assets": ["apps/gateway/src/assets"],
-          "skipTypeChecking": true
+          "typeCheckOptions": false
         },
         "configurations": {
           "development": {
