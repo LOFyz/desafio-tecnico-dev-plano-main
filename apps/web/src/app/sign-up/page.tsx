@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 
 import { getSession } from '@/lib/auth/session';
 import { safeNextPath } from '@/lib/auth/safe-next';
-import { SignInForm } from '@/components/molecules/sign-in-form';
+import { SignUpForm } from '@/components/molecules/sign-up-form';
 import {
   Card,
   CardContent,
@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from '@/components/atoms/ui/card';
 
-export default async function SignInPage({
+export default async function SignUpPage({
   searchParams,
 }: {
   searchParams: Promise<{ next?: string }>;
@@ -22,20 +22,20 @@ export default async function SignInPage({
   const session = await getSession();
   if (session) redirect(next);
 
-  const signUpHref = `/sign-up?next=${encodeURIComponent(next)}`;
+  const signInHref = `/sign-in?next=${encodeURIComponent(next)}`;
 
   return (
     <main className="container flex min-h-screen flex-col items-center justify-center gap-6 py-12">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Sign in</CardTitle>
+          <CardTitle>Create your account</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <SignInForm />
+          <SignUpForm />
           <p className="text-sm text-muted-foreground">
-            Don&apos;t have an account?{' '}
-            <Link className="underline" href={signUpHref}>
-              Sign up
+            Already have an account?{' '}
+            <Link className="underline" href={signInHref}>
+              Sign in
             </Link>
           </p>
         </CardContent>
