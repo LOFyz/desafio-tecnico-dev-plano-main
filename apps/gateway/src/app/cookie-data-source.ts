@@ -3,9 +3,16 @@ import type { GraphQLDataSourceProcessOptions } from '@apollo/gateway';
 
 export class CookieDataSource extends RemoteGraphQLDataSource {
   override willSendRequest(options: GraphQLDataSourceProcessOptions) {
-    const cookie = (options.context as any)?.req?.headers?.cookie as string | undefined;
+    const headers = (options.context as any)?.req?.headers as
+      | Record<string, string | undefined>
+      | undefined;
+    const cookie = headers?.cookie;
+    const authorization = headers?.authorization;
     if (cookie) {
       options.request.http?.headers.set('cookie', cookie);
+    }
+    if (authorization) {
+      options.request.http?.headers.set('authorization', authorization);
     }
   }
 }
