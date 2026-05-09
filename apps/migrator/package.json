@@ -22,7 +22,7 @@
           "sourceMap": true,
           "generatePackageJson": false,
           "assets": ["apps/migrator/src/assets"],
-          "typeCheckOptions": false
+          "skipTypeChecking": true
         },
         "configurations": {
           "development": {
