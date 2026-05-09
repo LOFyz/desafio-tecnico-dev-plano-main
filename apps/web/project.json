@@ -1,0 +1,40 @@
+{
+  "name": "@desafio/web",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/web/src",
+  "projectType": "application",
+  "targets": {
+    "dev": {
+      "continuous": true,
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/web",
+        "command": "next dev -p ${WEB_PORT:-4200}"
+      }
+    },
+    "start": {
+      "continuous": true,
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "cwd": "apps/web",
+        "command": "next start -p ${WEB_PORT:-4200}"
+      }
+    },
+    "codegen": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/web",
+        "command": "graphql-codegen --config codegen.ts"
+      }
+    },
+    "codegen:watch": {
+      "continuous": true,
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/web",
+        "command": "graphql-codegen --config codegen.ts --watch"
+      }
+    }
+  }
+}
