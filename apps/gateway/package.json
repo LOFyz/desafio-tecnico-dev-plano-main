@@ -5,19 +5,27 @@
   "nx": {
     "targets": {
       "build": {
-        "executor": "nx:run-commands",
+        "executor": "@nx/rspack:rspack",
+        "outputs": [
+          "{workspaceRoot}/apps/gateway/dist"
+        ],
         "options": {
-          "command": "webpack-cli build",
-          "args": [
-            "--node-env=production"
-          ],
-          "cwd": "apps/gateway"
+          "rspackConfig": "apps/gateway/rspack.config.js",
+          "tsConfig": "apps/gateway/tsconfig.app.json",
+          "main": "apps/gateway/src/main.ts",
+          "outputPath": "apps/gateway/dist",
+          "target": "node",
+          "mode": "production",
+          "optimization": false,
+          "outputHashing": "none",
+          "sourceMap": true,
+          "generatePackageJson": false,
+          "assets": ["apps/gateway/src/assets"],
+          "skipTypeChecking": true
         },
         "configurations": {
           "development": {
-            "args": [
-              "--node-env=development"
-            ]
+            "mode": "development"
           }
         }
       },
@@ -78,18 +86,20 @@
     }
   },
   "dependencies": {
-    "@desafio/db": "workspace:*",
-    "@mikro-orm/core": "^7.0.14",
-    "@mikro-orm/nestjs": "^7.0.1",
-    "@mikro-orm/postgresql": "^7.0.14",
+    "@apollo/gateway": "^2.0.0",
+    "@nestjs/apollo": "^12.0.0",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
+    "@nestjs/graphql": "^12.0.0",
     "@nestjs/platform-express": "^11.0.0",
+    "cookie-parser": "^1.4.0",
+    "graphql": "^16.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@nestjs/testing": "^11.0.0"
+    "@nestjs/testing": "^11.0.0",
+    "@types/cookie-parser": "^1.4.0"
   }
 }
