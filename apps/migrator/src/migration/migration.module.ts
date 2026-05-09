@@ -3,7 +3,11 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { ConfigService } from '@nestjs/config';
 import { Migrator } from '@mikro-orm/migrations';
-import { createMikroOrmOptions, Migration20260508_BetterAuthSchema } from '@desafio/db';
+import {
+  createMikroOrmOptions,
+  Migration20260508_BetterAuthSchema,
+  Migration20260509_AddWpUserId,
+} from '@desafio/db';
 import {
   UserEntitySchema,
   SessionEntitySchema,
@@ -34,6 +38,10 @@ export const UsersInfrastructureEntities = [
             {
               name: 'Migration20260508_BetterAuthSchema',
               class: Migration20260508_BetterAuthSchema,
+            },
+            {
+              name: 'Migration20260509_AddWpUserId',
+              class: Migration20260509_AddWpUserId,
             },
           ],
         },
