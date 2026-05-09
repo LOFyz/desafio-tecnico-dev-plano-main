@@ -21,6 +21,10 @@ import { CookieDataSource } from './cookie-data-source';
               name: 'users',
               url: process.env['USERS_SUBGRAPH_URL'] ?? 'http://localhost:3001/graphql',
             },
+            {
+              name: 'posts',
+              url: process.env['POSTS_SUBGRAPH_URL'] ?? 'http://localhost:8080/graphql',
+            },
           ],
         }),
       },
