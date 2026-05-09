@@ -1,0 +1,31 @@
+**/node_modules
+**/dist
+**/.next
+**/.sst
+**/.open-next
+**/.logs
+**/.run
+**/coverage
+**/tmp
+**/out-tsc
+**/.nx
+**/.turbo
+**/.cache
+
+# Local env files — never bake into images. Secrets come from sst secret set.
+.env
+.env.*
+!.env.example
+**/.env.local
+**/.env.development
+**/.env.production
+
+# IDE / git noise
+.git
+.gitignore
+.idea
+.vscode
+*.log
+
+# Build outputs from the WP container we don't ship via app images
+docker/wordpress/dist
