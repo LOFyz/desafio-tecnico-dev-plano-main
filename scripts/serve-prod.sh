@@ -68,7 +68,13 @@ start_web() {
   local pid_file="$PID_DIR/web.pid"
 
   log "Starting web on port $port → $log_file"
+  # `next start` only reads .env files inside apps/web/, not the workspace
+  # root .env. The /api/blog-copilot/run route handler needs AI_API_KEY +
+  # MCP_SERVER_URL + WP_GRAPHQL_SERVICE_TOKEN, all of which live at the
+  # workspace .env. Source it before invoking next so they reach the
+  # process.env the route handler sees.
   (
+    set -a; . "$ROOT_DIR/.env"; set +a
     cd apps/web
     PORT="$port" nohup pnpm exec next start >"$log_file" 2>&1 &
     echo $! >"$pid_file"
