@@ -5,6 +5,10 @@ dist
 tmp
 out-tsc
 
+# scripts/serve-prod.sh background-process artifacts
+.logs
+.run
+
 # dependencies
 node_modules
 
