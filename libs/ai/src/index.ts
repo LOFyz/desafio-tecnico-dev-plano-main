@@ -5,3 +5,4 @@ export { POST_AGENT } from './lib/domain/post-agent';
 export type { PostAgent, PostAgentInput } from './lib/domain/post-agent';
 export type { PostAgentResult, PostRef } from './lib/domain/post-agent-result';
 export { AiGenerationFailedError, WpPublishFailedError } from './lib/errors';
+export { LangChainMcpPostAgent } from './lib/infrastructure/langchain-mcp-post-agent';
