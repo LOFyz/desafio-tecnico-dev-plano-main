@@ -15,7 +15,7 @@ export function PostDetail({ post }: PostDetailProps) {
           {p.title ?? 'Untitled'}
         </h1>
         <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <AuthorDisplay author={p.appUser} />
+          <AuthorDisplay author={p.author?.node?.appUser ?? null} />
           {p.date && <time>{new Date(p.date).toLocaleDateString()}</time>}
         </div>
       </header>

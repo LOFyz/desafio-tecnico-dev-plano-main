@@ -8,9 +8,13 @@ export const POST_CARD_FRAGMENT = graphql(/* GraphQL */ `
     title
     excerpt
     date
-    appUser {
-      id
-      name
+    author {
+      node {
+        appUser {
+          id
+          name
+        }
+      }
     }
   }
 `);

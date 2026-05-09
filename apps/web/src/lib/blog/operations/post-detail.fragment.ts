@@ -8,10 +8,14 @@ export const POST_DETAIL_FRAGMENT = graphql(/* GraphQL */ `
     title
     content
     date
-    appUser {
-      id
-      name
-      email
+    author {
+      node {
+        appUser {
+          id
+          name
+          email
+        }
+      }
     }
   }
 `);

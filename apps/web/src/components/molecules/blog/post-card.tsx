@@ -40,7 +40,7 @@ export function PostCard({ post }: PostCardProps) {
             dangerouslySetInnerHTML={{ __html: p.excerpt }}
           />
         )}
-        <AuthorDisplay author={p.appUser} />
+        <AuthorDisplay author={p.author?.node?.appUser ?? null} />
       </CardContent>
     </Card>
   );
