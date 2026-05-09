@@ -38,6 +38,7 @@ spl_autoload_register(function ($class) {
 });
 
 \Manuelantunes\WpGraphqlFederations\Federation::init();
+\Manuelantunes\WpGraphqlFederations\AppUserBridge::init();
 
 if ( is_admin() ) {
 	\Manuelantunes\WpGraphqlFederations\Admin::init();
