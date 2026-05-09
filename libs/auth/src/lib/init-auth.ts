@@ -6,6 +6,7 @@ export interface BetterAuthConfig {
   secret: string;
   baseUrl: string;
   basePath: string;
+  trustedOrigins: string[];
   googleClientId: string | undefined;
   googleClientSecret: string | undefined;
 }
@@ -20,6 +21,7 @@ export function initAuth(
     basePath: config.basePath,
     baseURL: config.baseUrl,
     secret: config.secret,
+    trustedOrigins: config.trustedOrigins,
     database: adapter,
     logger: {
       disabled: false,
