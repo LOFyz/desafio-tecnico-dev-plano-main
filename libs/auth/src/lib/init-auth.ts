@@ -3,6 +3,7 @@ import type { BetterAuthOptions, DBAdapter } from 'better-auth';
 import { betterAuth } from 'better-auth';
 import { Pool } from 'pg';
 import { lookupWpUserIdByEmail } from './wp-user-lookup';
+import { linkAppUserOnWp } from './wp-app-user-link';
 
 export interface BetterAuthConfig {
   secret: string;
@@ -61,6 +62,18 @@ export function initAuth(
                 user.id,
               ]);
               logger.log(`Linked ${user.email} → WP databaseId ${databaseId}`);
+
+              // Inverse direction: write the app_user_id meta on the WP user
+              // so WordPress can emit `User.appUser` as a federation entity
+              // reference of our AppUser. Best-effort; failure is logged but
+              // does NOT roll back the signup.
+              const linkedWpId = await linkAppUserOnWp(user.email, user.id, {
+                url: config.wpGraphqlUrl,
+                token: config.wpServiceToken,
+              });
+              if (linkedWpId !== null) {
+                logger.log(`Linked WP user ${linkedWpId} ← app_user_id ${user.id}`);
+              }
             } catch (err) {
               logger.warn(`Failed to link ${user.email}: ${(err as Error).message}`);
             }
