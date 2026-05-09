@@ -47,19 +47,19 @@
 
 ## 6. Remove ai-subgraph and PostAppUserResolver
 
-- [ ] 6.1 Delete `apps/ai-subgraph/` entirely (`rm -rf apps/ai-subgraph`).
+- [x] 6.1 Delete `apps/ai-subgraph/` entirely (`rm -rf apps/ai-subgraph`). Also dropped its entry from the root `tsconfig.json` project references.
 - [ ] 6.2 In `apps/users-subgraph/src/users/users.resolver.ts`, delete `PostAppUserResolver` and its imports; keep `AppUserReferenceResolver` untouched.
 - [ ] 6.3 In `apps/users-subgraph/src/users/users.module.ts`, remove `PostAppUserResolver` from the providers list.
 - [ ] 6.4 In `apps/users-subgraph/src/users/loaders/loader-factory.ts`, delete the `postAuthorWpId` loader and its WP-fetch helper; keep `appUserByWpId` (still used elsewhere).
 - [ ] 6.5 In `apps/users-subgraph/src/schema.graphql`, remove the `appUser: AppUser` field from the `Post` type extension; if the only remaining content of the `extend type Post` block was that field, remove the whole `extend type Post` declaration too.
-- [ ] 6.6 In `apps/gateway/src/app/app.module.ts`, remove the `{ name: 'ai', url: ... }` entry from `IntrospectAndCompose.subgraphs`.
-- [ ] 6.7 Verify `pnpm nx run-many -t build -p users-subgraph gateway mcp-server web` succeeds end-to-end after deletions.
+- [x] 6.6 In `apps/gateway/src/app/app.module.ts`, remove the `{ name: 'ai', url: ... }` entry from `IntrospectAndCompose.subgraphs`.
+- [x] 6.7 Verify `pnpm nx run-many -t build -p users-subgraph gateway mcp-server web` succeeds end-to-end after deletions. (Verified 2026-05-09 after the partial group 6 work — full PostAppUserResolver removal still pending Group 1.)
 
 ## 7. Ops: env, scripts, docs
 
-- [ ] 7.1 Update `.env.example`: REMOVE `AI_SUBGRAPH_URL`; ADD `MCP_SERVER_URL=http://localhost:4000/mcp`, `MCP_SERVER_PORT=4000`, `MCP_TRANSPORT=http+sse`. Add comments noting the mcp-server is a separate process.
-- [ ] 7.2 Update local `.env` accordingly.
-- [ ] 7.3 Update `scripts/serve-prod.sh`: REMOVE the `start_node_app ai-subgraph 3002 ...` block; ADD a `start_node_app mcp-server 4000 apps/mcp-server/dist/main.js` block AFTER the gateway start (gateway must be up before mcp-server can introspect it); update the `PORTS=()` array (`3002` → `4000`); update the build set in the `nx run-many` line; update the final URL summary block.
+- [x] 7.1 Update `.env.example`: REMOVE `AI_SUBGRAPH_URL`; ADD `MCP_SERVER_URL=http://localhost:4000/mcp`, `MCP_SERVER_PORT=4000`, `MCP_TRANSPORT=http+sse`. Add comments noting the mcp-server is a separate process.
+- [x] 7.2 Update local `.env` accordingly.
+- [x] 7.3 Update `scripts/serve-prod.sh`: REMOVE the `start_node_app ai-subgraph 3002 ...` block; ADD a `start_node_app mcp-server 4000 apps/mcp-server/dist/main.js` block AFTER the gateway start (gateway must be up before mcp-server can introspect it); update the `PORTS=()` array (`3002` → `4000`); update the build set in the `nx run-many` line; update the final URL summary block.
 - [ ] 7.4 Run `./scripts/serve-prod.sh` end-to-end and confirm: ports cleared, all four apps build, all four bind their ports in order, summary block prints all four URLs.
 
 ## 8. End-to-end verification + cleanup gates
