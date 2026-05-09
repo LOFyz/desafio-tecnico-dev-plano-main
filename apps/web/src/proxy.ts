@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 const SESSION_COOKIE = 'better-auth.session_token';
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const hasSession = req.cookies.has(SESSION_COOKIE);
   if (hasSession) return NextResponse.next();
 
