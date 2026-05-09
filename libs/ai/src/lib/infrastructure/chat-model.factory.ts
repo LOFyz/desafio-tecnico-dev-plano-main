@@ -1,10 +1,10 @@
-import type { LanguageModel } from 'ai';
-import { createOpenAI } from '@ai-sdk/openai';
-import { createAnthropic } from '@ai-sdk/anthropic';
+import type { BaseChatModel } from '@langchain/core/language_models/chat_models';
+import { ChatOpenAI } from '@langchain/openai';
+import { ChatAnthropic } from '@langchain/anthropic';
 
 const NVIDIA_BASE_URL = 'https://integrate.api.nvidia.com/v1';
 
-export function createChatModel(): LanguageModel {
+export function createChatModel(): BaseChatModel {
   const provider = process.env['AI_PROVIDER'] ?? 'nvidia';
   const model = process.env['AI_MODEL'] ?? 'meta/llama-3.3-70b-instruct';
   const apiKey = process.env['AI_API_KEY'];
@@ -16,18 +16,19 @@ export function createChatModel(): LanguageModel {
 
   switch (provider) {
     case 'nvidia':
-      // NVIDIA NIM exposes the OpenAI-compatible /chat/completions endpoint
-      // but NOT /responses. The default `provider(model)` call uses the
-      // Responses API; we explicitly pick `.chat()` so the request hits
-      // /chat/completions where NVIDIA can answer.
-      return createOpenAI({
+      return new ChatOpenAI({
         apiKey,
-        baseURL: baseURL ?? NVIDIA_BASE_URL,
-      }).chat(model);
+        model,
+        configuration: { baseURL: baseURL ?? NVIDIA_BASE_URL },
+      });
     case 'openai':
-      return createOpenAI({ apiKey, baseURL })(model);
+      return new ChatOpenAI({
+        apiKey,
+        model,
+        configuration: baseURL ? { baseURL } : undefined,
+      });
     case 'anthropic':
-      return createAnthropic({ apiKey })(model);
+      return new ChatAnthropic({ apiKey, model });
     default:
       throw new Error(`Unknown AI_PROVIDER: ${provider}`);
   }
