@@ -92,11 +92,11 @@ The route handler (and the underlying `LangChainMcpPostAgent` adapter) SHALL rea
 
 ### Requirement: Agent logic lives in `libs/ai` with DDD layering
 
-The agent's logic SHALL live in `libs/ai/` organized into `domain/`, `infrastructure/`, and `application/` subdirectories. The `domain/` layer SHALL declare a `PostAgent` port interface (`run({ prompt, userId, sessionCookie }): Promise<PostAgentResult>`) and the `PostAgentResult` discriminated union. The `application/` layer SHALL declare a `RunPostAgentCommand` (with `prompt`, `userId`, and `sessionCookie` fields) and its CQRS `CommandHandler` that depends on the port via DI. The `infrastructure/` layer SHALL provide the `LangChainMcpPostAgent` adapter and the LangChain chat-model factory. The route handler MUST NOT import LangChain or any provider package directly — it MUST dispatch the `RunPostAgentCommand` through `CommandBus`.
+The agent's logic SHALL live in `libs/ai/` organized into `domain/`, `infrastructure/`, and `application/` subdirectories. The `domain/` layer SHALL declare a `PostAgent` port interface (`run({ prompt, userId, sessionCookie }): Promise<PostAgentResult>`) and the `PostAgentResult` discriminated union. The `application/` layer SHALL declare a `RunPostAgentCommand` (with `prompt`, `userId`, and `sessionCookie` fields) and its CQRS `CommandHandler` that depends on the port via DI. The `infrastructure/` layer SHALL provide the `LangChainMcpPostAgent` adapter and the LangChain chat-model factory. The route handler MUST NOT import LangChain or any provider package directly — it MUST go through the application layer by constructing a `RunPostAgentCommand` and dispatching it via `RunPostAgentHandler.execute(...)` (either through Nest's `CommandBus` when running inside a Nest host, or via direct handler invocation when running inside a non-Nest host such as a Next.js Route Handler).
 
-#### Scenario: Route handler dispatches via CommandBus
+#### Scenario: Route handler dispatches through the application layer
 - **WHEN** the `/api/blog-copilot/run` route handler runs
-- **THEN** its body MUST construct a `RunPostAgentCommand` and call `commandBus.execute(...)` and MUST NOT contain calls to LangChain `createReactAgent`, `ChatOpenAI`, MCP-adapter constructors, or any provider-package import
+- **THEN** its body MUST construct a `RunPostAgentCommand` and pass it to `RunPostAgentHandler.execute(...)` (directly or via `CommandBus.execute(...)`) and MUST NOT contain calls to LangChain `createReactAgent`, `ChatOpenAI`, MCP-adapter constructors, or any provider-package import
 
 #### Scenario: Agent is swappable via the port
 - **WHEN** a future test or implementation provides an alternative `PostAgent` to the DI container

@@ -37,7 +37,7 @@
       "path": "./apps/migrator"
     },
     {
-      "path": "./apps/ai-subgraph"
+      "path": "./apps/mcp-server"
     }
   ]
 }

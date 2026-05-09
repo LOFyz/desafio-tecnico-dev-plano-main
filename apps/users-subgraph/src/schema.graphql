@@ -1,15 +1,10 @@
 extend schema
-  @link(url: "https://specs.apollo.dev/federation/v2.7", import: ["@key", "@external"])
+  @link(url: "https://specs.apollo.dev/federation/v2.7", import: ["@key"])
 
 type AppUser @key(fields: "id") {
   id: ID!
   email: String!
   name: String!
-}
-
-type Post @key(fields: "databaseId") {
-  databaseId: Int! @external
-  appUser: AppUser
 }
 
 type Query {

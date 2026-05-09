@@ -17,6 +17,24 @@ const nextConfig = {
   experimental: {
     proxyTimeout: 120_000,
   },
+  // The /api/blog-copilot/run route handler instantiates the libs/ai
+  // application layer (LangChain agent + MCP client + Nest CQRS wiring).
+  // Don't bundle these into the Next route — they're heavy, they pull
+  // optional Nest peers (@nestjs/microservices, etc.) that we don't ship,
+  // and they're already physically present in node_modules at runtime.
+  serverExternalPackages: [
+    '@desafio/ai',
+    '@nestjs/common',
+    '@nestjs/core',
+    '@nestjs/cqrs',
+    'reflect-metadata',
+    '@langchain/core',
+    '@langchain/openai',
+    '@langchain/anthropic',
+    '@langchain/langgraph',
+    '@langchain/mcp-adapters',
+    '@modelcontextprotocol/sdk',
+  ],
   async rewrites() {
     return [
       { source: '/api/graphql', destination: `${gatewayUrl}/graphql` },
