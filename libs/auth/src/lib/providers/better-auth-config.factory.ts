@@ -8,10 +8,17 @@ export const BetterAuthConfigFactory = {
   useFactory(config: ConfigService): BetterAuthConfig {
     const secret = config.get<string>('BETTER_AUTH_SECRET');
     if (!secret) throw new Error('BETTER_AUTH_SECRET is required');
+    const trustedOriginsRaw =
+      config.get<string>('BETTER_AUTH_TRUSTED_ORIGINS') ?? '';
+    const trustedOrigins = trustedOriginsRaw
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
     return {
       secret,
       baseUrl: config.get<string>('BETTER_AUTH_URL') ?? 'http://localhost:3001',
       basePath: config.get<string>('BETTER_AUTH_BASE_PATH') ?? '/auth',
+      trustedOrigins,
       googleClientId: config.get<string>('GOOGLE_CLIENT_ID'),
       googleClientSecret: config.get<string>('GOOGLE_CLIENT_SECRET'),
     };
