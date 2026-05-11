@@ -11,6 +11,9 @@ importers:
       '@apollo/subgraph':
         specifier: ^2.9.0
         version: 2.14.0(graphql@16.14.0)
+      '@as-integrations/express5':
+        specifier: ^1.0.0
+        version: 1.1.2(express@5.2.1)
       '@better-auth/kysely-adapter':
         specifier: ^1.2.7
         version: 1.6.9(@better-auth/core@1.6.9(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.5(zod@4.3.6))(jose@6.2.3)(kysely@0.27.6)(nanostores@1.3.0))(@better-auth/utils@0.4.0)(kysely@0.27.6)
@@ -31,7 +34,7 @@ importers:
         version: 7.0.14(@mikro-orm/core@7.0.14(dataloader@2.2.3))
       '@nestjs/apollo':
         specifier: ^13.0.0
-        version: 13.4.0(@apollo/gateway@2.14.0(encoding@0.1.13)(graphql@16.14.0))(@apollo/subgraph@2.14.0(graphql@16.14.0))(@nestjs/common@11.1.19(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@11.1.19)(@nestjs/graphql@13.4.0(@apollo/subgraph@2.14.0(graphql@16.14.0))(@nestjs/common@11.1.19(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@11.1.19)(graphql@16.14.0)(reflect-metadata@0.1.14)(ts-morph@28.0.0))(graphql@16.14.0)
+        version: 13.4.0(@apollo/gateway@2.14.0(encoding@0.1.13)(graphql@16.14.0))(@apollo/subgraph@2.14.0(graphql@16.14.0))(@as-integrations/express5@1.1.2(express@5.2.1))(@nestjs/common@11.1.19(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@11.1.19)(@nestjs/graphql@13.4.0(@apollo/subgraph@2.14.0(graphql@16.14.0))(@nestjs/common@11.1.19(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@11.1.19)(graphql@16.14.0)(reflect-metadata@0.1.14)(ts-morph@28.0.0))(graphql@16.14.0)
       '@nestjs/common':
         specifier: ^11.0.0
         version: 11.1.19(reflect-metadata@0.1.14)(rxjs@7.8.2)
@@ -874,6 +877,13 @@ packages:
     resolution: {integrity: sha512-afG3YPwuSA0E5foouZusz5GlXKs74dObv4cuWyLyfKsYFj2r7oGRNB28v18HvwuLSQtQFCi+DpIe0TZkgQDYyg==}
     peerDependencies:
       graphql: '*'
+
+  '@as-integrations/express5@1.1.2':
+    resolution: {integrity: sha512-BxfwtcWNf2CELDkuPQxi5Zl3WqY/dQVJYafeCBOGoFQjv5M0fjhxmAFZ9vKx/5YKKNeok4UY6PkFbHzmQrdxIA==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@apollo/server': ^4.0.0 || ^5.0.0
+      express: ^5.0.0
 
   '@ast-grep/napi-darwin-arm64@0.40.5':
     resolution: {integrity: sha512-2F072fGN0WTq7KI3okuEnkGJVEHLbi56Bw1H6NAMf7j2mJJeQWsRyGOMcyNnUXZDeNdvoMH0OB2a5wwUegY/nQ==}
@@ -12208,6 +12218,10 @@ snapshots:
       immutable: 5.1.5
       invariant: 2.2.4
 
+  '@as-integrations/express5@1.1.2(express@5.2.1)':
+    dependencies:
+      express: 5.2.1
+
   '@ast-grep/napi-darwin-arm64@0.40.5':
     optional: true
 
@@ -15755,7 +15769,7 @@ snapshots:
       '@apollo/gateway': 2.14.0(encoding@0.1.13)(graphql@16.14.0)
       '@apollo/subgraph': 2.14.0(graphql@16.14.0)
 
-  '@nestjs/apollo@13.4.0(@apollo/gateway@2.14.0(encoding@0.1.13)(graphql@16.14.0))(@apollo/subgraph@2.14.0(graphql@16.14.0))(@nestjs/common@11.1.19(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@11.1.19)(@nestjs/graphql@13.4.0(@apollo/subgraph@2.14.0(graphql@16.14.0))(@nestjs/common@11.1.19(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@11.1.19)(graphql@16.14.0)(reflect-metadata@0.1.14)(ts-morph@28.0.0))(graphql@16.14.0)':
+  '@nestjs/apollo@13.4.0(@apollo/gateway@2.14.0(encoding@0.1.13)(graphql@16.14.0))(@apollo/subgraph@2.14.0(graphql@16.14.0))(@as-integrations/express5@1.1.2(express@5.2.1))(@nestjs/common@11.1.19(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@11.1.19)(@nestjs/graphql@13.4.0(@apollo/subgraph@2.14.0(graphql@16.14.0))(@nestjs/common@11.1.19(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@11.1.19)(graphql@16.14.0)(reflect-metadata@0.1.14)(ts-morph@28.0.0))(graphql@16.14.0)':
     dependencies:
       '@apollo/server-plugin-landing-page-graphql-playground': 4.0.1
       '@nestjs/common': 11.1.19(reflect-metadata@0.1.14)(rxjs@7.8.2)
@@ -15768,6 +15782,7 @@ snapshots:
     optionalDependencies:
       '@apollo/gateway': 2.14.0(encoding@0.1.13)(graphql@16.14.0)
       '@apollo/subgraph': 2.14.0(graphql@16.14.0)
+      '@as-integrations/express5': 1.1.2(express@5.2.1)
 
   '@nestjs/common@11.1.19(reflect-metadata@0.1.14)(rxjs@7.8.2)':
     dependencies:

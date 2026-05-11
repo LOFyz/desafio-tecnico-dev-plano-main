@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@apollo/subgraph": "^2.9.0",
+    "@as-integrations/express5": "^1.0.0",
     "@better-auth/kysely-adapter": "^1.2.7",
     "@mikro-orm/core": "^7.0.14",
     "@mikro-orm/migrations": "^7.0.14",
