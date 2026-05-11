@@ -65,3 +65,13 @@ vite.config.*.timestamp*
 
 # MikroORM schema snapshot
 .snapshot-*.json
+
+# Session-local AWS env file (assistant-managed; not committed)
+.aws-deploy-env
+
+# SST-generated typed Resource declarations (one per workspace project).
+# Useful for `Resource.X` typed access but our apps read from env vars,
+# so these add diff noise without value. Re-generated on every `sst dev`/
+# `sst deploy`.
+sst-env.d.ts
+**/sst-env.d.ts
