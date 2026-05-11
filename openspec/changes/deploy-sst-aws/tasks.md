@@ -64,8 +64,8 @@
 
 ## 10. End-to-end deploy + verification
 
-- [ ] 10.1 `sst secret set` all 5 secrets (placeholder for `WpGraphqlServiceToken`).
-- [ ] 10.2 `sst deploy --stage prod`. Wait for the deploy to settle. Capture the 5 stage outputs.
+- [x] 10.1 `sst secret set` all 5 secrets (placeholder for `WpGraphqlServiceToken`).
+- [x] 10.2 `sst deploy --stage prod`. Wait for the deploy to settle. Capture the 5 stage outputs.
 - [ ] 10.3 Verify each Service is RUNNING: `aws ecs list-services --cluster <stage-cluster>` then `describe-services` for each.
 - [ ] 10.4 Hit the WP URL in a browser, complete the WP install wizard if needed (or skip — the entrypoint provisions admin + desafio-svc automatically).
 - [ ] 10.5 `aws ecs execute-command` into the WP task, run `wp jwt-auth-token issue desafio-svc --allow-root`, capture the JWT.
@@ -78,6 +78,6 @@
 
 ## 11. Cleanup gates (mirror enforce-pure-federation 8.x)
 
-- [ ] 11.1 `git grep` returns zero hits for hardcoded `localhost:3000`, `localhost:3001`, `localhost:4000`, `localhost:4200` outside of `scripts/serve-prod.sh`, `.env.example`, the local `docker-compose.yaml`, and the openspec docs.
+- [x] 11.1 `git grep` returns zero hits for hardcoded `localhost:3000`, `localhost:3001`, `localhost:4000`, `localhost:4200` outside of `scripts/serve-prod.sh`, `.env.example`, the local `docker-compose.yaml`, and the openspec docs.
 - [ ] 11.2 `pnpm nx run-many -t lint,build` clean across all projects after the config + Dockerfile additions.
 - [ ] 11.3 The Dockerfile builds reproduce CI-side without errors (verify in a clean clone or via `docker build` from a tmpdir).
