@@ -1,4 +1,9 @@
-**/node_modules
+# Per-app node_modules (the workspace one at /node_modules is INCLUDED so
+# the Service Dockerfiles can COPY it instead of running `pnpm install`
+# inside the BuildKit container — avoids the WSL2/Docker DNS flake hitting
+# registry.npmjs.org during the build).
+apps/*/node_modules
+libs/**/node_modules
 **/dist
 **/.next
 **/.sst
@@ -29,3 +34,7 @@
 
 # Build outputs from the WP container we don't ship via app images
 docker/wordpress/dist
+
+
+# sst
+.sst

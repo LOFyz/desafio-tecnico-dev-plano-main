@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:1.7
 # Build context MUST be the workspace root.
 # From the workspace root: docker build -t desafio-users-subgraph -f apps/users-subgraph/Dockerfile .
 
@@ -11,15 +10,15 @@ COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY nx.json tsconfig.base.json ./
 COPY apps/users-subgraph/package.json apps/users-subgraph/
 COPY libs/ libs/
-
-RUN pnpm install --frozen-lockfile
+COPY node_modules ./node_modules
 
 COPY apps/users-subgraph apps/users-subgraph
-
 RUN pnpm nx build users-subgraph
 
 # ---- runtime ----
-FROM gcr.io/distroless/nodejs24-debian12 AS runtime
+# Same gcr.io→docker-hub swap as the gateway image (gcr.io was unreachable
+# from the deploy host).
+FROM node:24-bookworm-slim AS runtime
 WORKDIR /app
 
 COPY --from=builder /workspace/apps/users-subgraph/dist /app
@@ -33,4 +32,4 @@ COPY --from=builder /workspace/apps/users-subgraph/src/schema.graphql /app/apps/
 
 ENV NODE_ENV=production PORT=3001
 EXPOSE 3001
-CMD ["main.js"]
+CMD ["node", "main.js"]
