@@ -6,8 +6,12 @@ export async function checkGatewayReachable(): Promise<{
   url: string;
 }> {
   const url = process.env['GATEWAY_URL'] ?? GATEWAY_URL_DEFAULT;
+  // Local dev: 5s is plenty. Behind the deployed Aurora SLS v2 (scale-to-
+  // zero) + Apollo Gateway composition cold start, the first probe can
+  // take 20-30s. Allow override via env.
+  const timeoutMs = Number(process.env['GATEWAY_HEALTH_TIMEOUT_MS'] ?? 30_000);
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 5_000);
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const res = await fetch(url, {
       method: 'POST',

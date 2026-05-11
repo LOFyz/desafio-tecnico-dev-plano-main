@@ -8,7 +8,12 @@ echo "⏳ Aguardando usuário wordpress..."
 
 echo "🔍 Tentando conectar ao MySQL com as credenciais: $WORDPRESS_DB_USER"
 
-until mysql -h db -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" --skip-ssl -e "SELECT 1" >/dev/null 2>&1; do
+# Resolve DB host from env. WORDPRESS_DB_HOST may be either "host" or "host:port".
+DB_HOST_ARG="${WORDPRESS_DB_HOST:-db}"
+DB_HOST_NAME="${DB_HOST_ARG%:*}"
+DB_HOST_PORT="${DB_HOST_ARG##*:}"
+if [ "$DB_HOST_NAME" = "$DB_HOST_PORT" ]; then DB_HOST_PORT=3306; fi
+until mysql -h "$DB_HOST_NAME" -P "$DB_HOST_PORT" -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" --skip-ssl -e "SELECT 1" >/dev/null 2>&1; do
   echo "⏳ Usuário wordpress ainda não pronto..."
   sleep 2
 done
@@ -83,6 +88,16 @@ install_plugin_from_git https://github.com/valu-digital/wp-graphql-polylang.git 
 install_plugin_from_git https://github.com/valu-digital/wp-graphql-offset-pagination.git wp-graphql-offset-pagination
 install_plugin_from_git https://github.com/m-muhsin/wp-graphql-reading-time wp-graphql-reading-time
 install_plugin_from_git https://github.com/wp-graphql/wp-graphql-jwt-authentication wp-graphql-jwt-authentication
+# wp-graphql-federations: baked into the image at /usr/src/wp-graphql-federations.
+# Copy it into wp-content/plugins/ on first boot if not already present (a
+# docker-compose bind mount, when in scope, shadows this copy with the
+# host-side source — local edits remain live). The git-clone fallback below
+# stays as a safety net for environments where neither the bind mount nor the
+# baked image is present (shouldn't happen, but defensive).
+if [ -d "/usr/src/wp-graphql-federations" ] && [ ! -d "/var/www/html/wp-content/plugins/wp-graphql-federations" ]; then
+  echo "   Seeding baked plugin: wp-graphql-federations"
+  cp -r /usr/src/wp-graphql-federations /var/www/html/wp-content/plugins/wp-graphql-federations
+fi
 install_plugin_from_git https://github.com/Manuel-Antunes/wp-graphql-federations wp-graphql-federations
 
 echo "✅ Plugins prontos!"

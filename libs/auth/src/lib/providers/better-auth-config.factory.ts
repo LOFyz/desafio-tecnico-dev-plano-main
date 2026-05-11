@@ -8,12 +8,16 @@ let sharedPool: Pool | undefined;
 
 function getPgPool(config: ConfigService): Pool {
   if (!sharedPool) {
+    const useSsl = config.get<string>('DB_SSL') === 'true';
     sharedPool = new Pool({
       host: config.getOrThrow<string>('DB_HOST'),
       port: Number(config.getOrThrow<string>('DB_PORT')),
       database: config.getOrThrow<string>('DB_NAME'),
       user: config.getOrThrow<string>('DB_USER'),
       password: config.getOrThrow<string>('DB_PASSWORD'),
+      // Aurora and most managed Postgres enforce SSL; local docker-compose
+      // doesn't. Gate via DB_SSL=true (set in sst.config for the deploy).
+      ...(useSsl ? { ssl: { rejectUnauthorized: false } } : {}),
     });
   }
   return sharedPool;
