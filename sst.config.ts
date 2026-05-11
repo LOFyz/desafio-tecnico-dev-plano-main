@@ -60,6 +60,24 @@ export default $config({
       googleClientSecret: new sst.Secret('GoogleClientSecret'),
     };
 
+    // Shared transform applied to every Service so the Fargate task lands
+    // in the VPC's PRIVATE subnets (with `assignPublicIp: false`). SST's
+    // default subnet selection picks PUBLIC subnets; combined with
+    // assignPublicIp:false the task has no internet egress and ECR pulls
+    // time out. Private subnets route 0.0.0.0/0 through the NAT-EC2
+    // instances.
+    const useFargatePrivateSubnets = (extra?: { launchType?: 'FARGATE' }) => ({
+      service: (args: any) => {
+        args.networkConfiguration = {
+          ...(args.networkConfiguration ?? {}),
+          assignPublicIp: false,
+          subnets: vpc.privateSubnets,
+        };
+        if (extra?.launchType) args.launchType = extra.launchType;
+        return undefined;
+      },
+    });
+
     // ---- WordPress ----
     //
     // Always-on (min/max=1, no Spot) so the synchronous Better Auth signup
@@ -78,6 +96,13 @@ export default $config({
       volumes: [
         { efs: wpContent, path: '/var/www/html/wp-content' },
       ],
+      // EFS-mounted Fargate tasks must live in private subnets (the EFS
+      // mount targets are private-only) and must NOT request a public IP
+      // (assignPublicIp + EFS triggers
+      // "Assign public IP is not supported for this launch type"). NAT-EC2
+      // handles egress from private subnets so the WP container can still
+      // reach external plugin updaters / wp.org.
+      transform: useFargatePrivateSubnets({ launchType: 'FARGATE' }),
       link: [mysql],
       environment: {
         WORDPRESS_DB_HOST: $interpolate`${mysql.host}:${mysql.port}`,
@@ -105,7 +130,10 @@ export default $config({
       cpu: '0.25 vCPU',
       memory: '0.5 GB',
       loadBalancer: {
-        ports: [{ listen: '3001/http', forward: '3001/http' }],
+        // ALB listens on 80 externally so `usersSubgraph.url` (which omits
+        // an explicit port) resolves at default port 80 from peer services;
+        // ALB forwards to the container on its internal port 3001.
+        ports: [{ listen: '80/http', forward: '3001/http' }],
       },
       link: [
         postgres,
@@ -121,6 +149,7 @@ export default $config({
         DB_NAME: postgres.database,
         DB_USER: postgres.username,
         DB_PASSWORD: postgres.password,
+        DB_SSL: 'true',
         BETTER_AUTH_SECRET: secrets.betterAuthSecret.value,
         BETTER_AUTH_BASE_PATH: '/auth',
         // BETTER_AUTH_URL: omitted on purpose — Better Auth derives baseURL
@@ -138,6 +167,7 @@ export default $config({
         WP_GRAPHQL_URL: $interpolate`${wordpress.url}/graphql`,
         WP_GRAPHQL_SERVICE_TOKEN: secrets.wpGraphqlServiceToken.value,
       },
+      transform: useFargatePrivateSubnets(),
     });
 
     // ---- gateway (Apollo Federation router, ALB :3000) ----
@@ -150,13 +180,15 @@ export default $config({
       cpu: '0.25 vCPU',
       memory: '0.5 GB',
       loadBalancer: {
-        ports: [{ listen: '3000/http', forward: '3000/http' }],
+        // Same listen=80, forward=container-port pattern (see UsersSubgraph).
+        ports: [{ listen: '80/http', forward: '3000/http' }],
       },
       link: [usersSubgraph, wordpress],
       environment: {
         USERS_SUBGRAPH_URL: $interpolate`${usersSubgraph.url}/graphql`,
         POSTS_SUBGRAPH_URL: $interpolate`${wordpress.url}/graphql`,
       },
+      transform: useFargatePrivateSubnets(),
     });
 
     // ---- mcp-server (HTTP+SSE proxy to the gateway, ALB :4000) ----
@@ -169,7 +201,8 @@ export default $config({
       cpu: '0.25 vCPU',
       memory: '0.5 GB',
       loadBalancer: {
-        ports: [{ listen: '4000/http', forward: '4000/http' }],
+        // Same listen=80, forward=container-port pattern.
+        ports: [{ listen: '80/http', forward: '4000/http' }],
       },
       link: [gateway],
       environment: {
@@ -177,6 +210,7 @@ export default $config({
         MCP_SERVER_PORT: '4000',
         MCP_TRANSPORT: 'http+sse',
       },
+      transform: useFargatePrivateSubnets(),
     });
 
     // ---- web (Next.js on Lambda + CloudFront via OpenNext) ----
